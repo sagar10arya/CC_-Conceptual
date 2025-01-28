@@ -469,7 +469,7 @@ const resetPassword = async (req, res) => {
     user.otp = null; // Clear OTP
     user.otpExpiresAt = null; // Clear expiration time
 
-    const updatedUser = await user.save();
+    await user.save();
 
 
     // Respond with success
