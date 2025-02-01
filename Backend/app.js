@@ -1,8 +1,11 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from 'path'
 
 const app = express();
+
+const __dirname = path.resolve();
 
 app.use(
   cors({
@@ -18,9 +21,13 @@ app.use(express.static("public"));
 
 app.use(cookieParser());
 
+app.use(express.static(path.join(__dirname, "/frontend/dist")))
+app.get('*', (_,res) => {
+  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
+})
 
 // routes
-import userRouter from './routes/user.routes.js'
+import userRouter from './src/routes/user.routes.js'
 
 
 // routes declaration

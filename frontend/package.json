@@ -17,6 +17,7 @@
     "@reduxjs/toolkit": "^2.3.0",
     "antd": "^5.23.2",
     "axios": "^1.7.9",
+    "backend": "file:..",
     "html-react-parser": "^5.1.18",
     "nodemailer": "^6.9.16",
     "react": "^18.3.1",

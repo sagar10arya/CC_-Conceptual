@@ -10,7 +10,7 @@ const InstagramGallery = () => {
           `https://graph.instagram.com/me/media?fields=id,media_type,media_url,caption&access_token=${import.meta.env.VITE_INSTAGRAM_ACCESS_TOKEN}`
         );
         const data = await response.json();
-        console.log(data.data);
+        // console.log(data.data);
         setPhotos(data.data);
       } catch (error) {
         console.error("Error fetching Instagram photos:", error);

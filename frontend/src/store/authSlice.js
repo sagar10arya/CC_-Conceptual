@@ -23,7 +23,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(loginSuccess, (state, action) => {
-      console.log("loginSuccess action:", action.payload);
+      // console.log("loginSuccess action:", action.payload);
     });
   },
 });
