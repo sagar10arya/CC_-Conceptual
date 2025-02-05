@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import connectDB from "./src/db/index.js";
 import express from "express";
 import cors from "cors";
@@ -6,7 +6,8 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import userRouter from "./src/routes/user.routes.js";
 
-dotenv.config({ path: "./env" });
+// dotenv.config({ path: "./env" });
+require("dotenv").config();
 
 const app = express();
 const __dirname = path.resolve();
