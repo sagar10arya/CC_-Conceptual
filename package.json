@@ -2,13 +2,13 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Conceptual Classes Backend Development",
-  "main": "index.js",
+  "main": "backend/index.js",
   "type": "module",
   "scripts": {
-  "dev": "nodemon backend/index.js",
-  "build": "cd frontend && npm install && npm run build",
-  "start": "node backend/index.js"
-},
+    "dev": "nodemon backend/index.js",
+    "build": "cd frontend && npm install && npm run build",
+    "start": "node backend/index.js"
+  },
   "keywords": [
     "javascript",
     "backend",
