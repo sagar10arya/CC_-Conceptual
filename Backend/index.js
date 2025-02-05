@@ -1,4 +1,4 @@
-import "dotenv/config";
+import dotenv from "dotenv";
 import connectDB from "./src/db/index.js";
 import express from "express";
 import cors from "cors";
@@ -6,8 +6,7 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import userRouter from "./src/routes/user.routes.js";
 
-// dotenv.config({ path: "./env" });
-require("dotenv").config();
+dotenv.config({ path: "./env" });
 
 const app = express();
 const __dirname = path.resolve();
@@ -32,7 +31,6 @@ app.get("*", (_, res) => {
 
 // Routes
 app.use("/api/v1/users", userRouter);
-
 connectDB()
   .then(() => {
     app.listen(process.env.PORT || 8000, () => {
