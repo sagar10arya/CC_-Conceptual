@@ -31,7 +31,7 @@ app.get("*", (_, res) => {
 
 // Routes
 app.use("/api/v1/users", userRouter);
-
+cd ..
 connectDB()
   .then(() => {
     app.listen(process.env.PORT || 8000, () => {
