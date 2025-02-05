@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon backend/index.js",
     "build": "cd frontend && npm install && npm run build",
-    "start": "node Backend/index.js"
+    "start": "node backend/index.js"
   },
   "keywords": [
     "javascript",
