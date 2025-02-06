@@ -5,7 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import userRouter from "./src/routes/user.routes.js";
-
+import fs from "fs";
 const app = express();
 
 import { fileURLToPath } from "url";
@@ -30,25 +30,36 @@ app.use(cookieParser());
 //   res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
 //   // res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
 // });
-const path = require("path");
 
-// Make sure this path is correct relative to your backend file
-const distPath = path.join(__dirname, "frontend", "dist");
+
+// Serve frontend build files
+const distPath = path.join(__dirname, "frontend", "dist");  // Changed: Corrected the path to `frontend/dist`
+console.log("Current directory:", __dirname);  // Debugging: Print the current directory
+console.log("Frontend dist path:", distPath);  // Debugging: Print the resolved path to `frontend/dist`
+
+// Serve static files from the dist directory (frontend build files)
 app.use(express.static(distPath));
-console.log("Current directory:", __dirname);
-console.log("Frontend dist path:", path.join(__dirname, "frontend", "dist"));
 
-// Serve the index.html correctly for all routes
+// Serve index.html for all routes
 app.get("*", (_, res) => {
-  const indexPath = path.join(distPath, "index.html");
+  const indexPath = path.join(distPath, "index.html");  // Changed: Use the corrected path for index.html
+  
+  // Debugging: Check if index.html exists at the specified path
+  
+  if (fs.existsSync(indexPath)) {
+    console.log('index.html exists at', indexPath);
+  } else {
+    console.error('index.html not found at', indexPath);
+  }
+
+  // Send the index.html file for all routes
   res.sendFile(indexPath, (err) => {
     if (err) {
-      console.error("Error serving index.html:", err);
-      res.status(500).send("Internal Server Error");
+      console.error('Error serving index.html:', err);  // If there's an error serving the file
+      res.status(500).send('Internal Server Error');  // Return 500 if there's an error
     }
   });
 });
-
 
 
 // Routes
