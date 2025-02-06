@@ -25,9 +25,17 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 // Serve frontend build files
+// app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// app.get("*", (_, res) => {
+//   res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+//   // res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
+// });
+console.log(path.join(__dirname, "frontend", "dist")); // Check the resolved path
 app.use(express.static(path.join(__dirname, "frontend", "dist")));
 app.get("*", (_, res) => {
-  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  const indexPath = path.resolve(__dirname, "frontend", "dist", "index.html");
+  console.log(indexPath); // Log the full path for debugging
+  res.sendFile(indexPath);
 });
 
 
