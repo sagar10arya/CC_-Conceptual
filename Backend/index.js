@@ -1,4 +1,3 @@
-// import dotenv from "dotenv";
 import "dotenv/config";
 import connectDB from "./src/db/index.js";
 import express from "express";
@@ -7,10 +6,16 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import userRouter from "./src/routes/user.routes.js";
 
-dotenv.config({ path: "../.env" });
+// dotenv.config({ path: "../.env" });
 
 const app = express();
-const __dirname = path.resolve();
+
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// import dotenv from "dotenv";
+// dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 app.use(
   cors({
@@ -27,7 +32,8 @@ app.use(cookieParser());
 // Serve frontend build files
 app.use(express.static(path.join(__dirname, "/frontend/dist")));
 app.get("*", (_, res) => {
-  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  // res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
 });
 
 // Routes
