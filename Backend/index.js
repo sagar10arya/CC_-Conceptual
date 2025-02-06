@@ -4,13 +4,33 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
-import userRouter from "./src/routes/user.routes.js";
-// import fs from "fs";
+import fs from "fs";
+import { fileURLToPath } from "url"; // ✅ Required for ES Modules
+
 const app = express();
 
-import { fileURLToPath } from "url";
+// Get __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Define the frontend dist path
+const distPath = path.join(__dirname, "frontend", "dist");
+
+// Debugging: Check if `dist` folder exists
+console.log("🔹 Serving frontend from:", distPath);
+if (!fs.existsSync(distPath)) {
+  console.error("❌ ERROR: dist folder not found at", distPath);
+} else {
+  console.log("✅ dist folder found!");
+}
+
+// ✅ Serve frontend build files
+app.use(express.static(distPath));
+
+// ✅ Serve index.html for unknown routes (Single Page Application)
+app.get("*", (_, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
+});
 
 app.use(
   cors({
@@ -21,59 +41,19 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.use(express.static("public"));
 app.use(cookieParser());
 
-// Serve frontend build files
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
-app.get("*", (_, res) => {
-  // res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-  res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
-});
-
-
-// Serve frontend build files
-// const distPath = path.join(__dirname, "frontend", "dist");  // Changed: Corrected the path to `frontend/dist`
-// console.log("Current directory:", __dirname);  // Debugging: Print the current directory
-// console.log("Frontend dist path:", distPath);  // Debugging: Print the resolved path to `frontend/dist`
-
-// // Serve static files from the dist directory (frontend build files)
-// app.use(express.static(distPath));
-
-// // Serve index.html for all routes
-// app.get("*", (_, res) => {
-//   const indexPath = path.join(distPath, "index.html");  // Changed: Use the corrected path for index.html
-  
-//   // Debugging: Check if index.html exists at the specified path
-  
-//   if (fs.existsSync(indexPath)) {
-//     console.log('index.html exists at', indexPath);
-//   } else {
-//     console.error('index.html not found at', indexPath);
-//   }
-
-//   // Send the index.html file for all routes
-//   res.sendFile(indexPath, (err) => {
-//     if (err) {
-//       console.error('Error serving index.html:', err);  // If there's an error serving the file
-//       res.status(500).send('Internal Server Error');  // Return 500 if there's an error
-//     }
-//   });
-// });
-
-
-// Routes
+// ✅ Routes
 app.use("/api/v1/users", userRouter);
+
+// ✅ Connect to Database and Start Server
 connectDB()
   .then(() => {
-    app.listen(process.env.PORT || 8000, () => {
-      console.log(`Server is running on port ${process.env.PORT || 8000}`);
-      app.on("error", (error) => {
-        console.log("ERR: ", error);
-        throw error;
-      });
+    const PORT = process.env.PORT || 8000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.log("MONGO DB connection failed !!!!: ", err);
+    console.error("❌ MONGO DB connection failed:", err);
   });
