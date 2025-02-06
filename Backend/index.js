@@ -30,13 +30,25 @@ app.use(cookieParser());
 //   res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
 //   // res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
 // });
-console.log(path.join(__dirname, "frontend", "dist")); // Check the resolved path
-app.use(express.static(path.join(__dirname, "frontend", "dist")));
+const path = require("path");
+
+// Make sure this path is correct relative to your backend file
+const distPath = path.join(__dirname, "frontend", "dist");
+app.use(express.static(distPath));
+console.log("Current directory:", __dirname);
+console.log("Frontend dist path:", path.join(__dirname, "frontend", "dist"));
+
+// Serve the index.html correctly for all routes
 app.get("*", (_, res) => {
-  const indexPath = path.resolve(__dirname, "frontend", "dist", "index.html");
-  console.log(indexPath); // Log the full path for debugging
-  res.sendFile(indexPath);
+  const indexPath = path.join(distPath, "index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error("Error serving index.html:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
 });
+
 
 
 // Routes
