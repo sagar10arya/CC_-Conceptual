@@ -35,11 +35,8 @@ function Login() {
         
         // Send login request to backend
         const response = await axiosInstance.post(
-          `${API_BASE_URL}/users/login`,
-          payload,
-          {
-            withCredentials: true, // ✅ Send cookies for authentication
-          }
+          "/api/v1/users/login",
+          payload
         );
         
         const { accessToken, refreshToken, user } = response.data.data;
