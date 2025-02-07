@@ -15,6 +15,8 @@ app.use(
     credentials: true,
   })
 );
+VITE_INSTAGRAM_ACCESS_TOKEN=IGAANL0Tb7LFZABZAE82YTFUTU1aZA1RUWmNOU1ZA3Vi15cWZAMWXZAhLXp5dG45ODdkY1NYTmdzRHJkOUdkU3N2MW5XelBrV1lMOVNnb0JOdHhuT3h3WTdaRXpDOGlWdlNocE5ZAMWRDdzh0UFRpMjFZAQXFmUUpGT05zak9Wd0I2MWlhWQZDZD
+VITE_API_URL=https://conceptual.onrender.com/api/v1
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
