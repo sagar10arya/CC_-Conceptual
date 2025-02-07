@@ -1,11 +1,12 @@
 import "dotenv/config";
 import connectDB from "./src/db/index.js";
+import userRouter from "./src/routes/user.routes.js";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import fs from "fs";
-import { fileURLToPath } from "url"; // ✅ Required for ES Modules
+import { fileURLToPath } from "url";
 
 const app = express();
 
@@ -14,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Define the frontend dist path
-const distPath = path.join(__dirname, "frontend", "dist");
+const distPath = path.join(__dirname, "./frontend/dist");
 
 // Debugging: Check if `dist` folder exists
 console.log("🔹 Serving frontend from:", distPath);
