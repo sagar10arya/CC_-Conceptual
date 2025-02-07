@@ -8,6 +8,8 @@ import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function Signup() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
@@ -21,7 +23,7 @@ function Signup() {
     setLoading(true);
     setError("");
     try {
-      await axiosInstance.post("/api/v1/users/register", data);
+      await axiosInstance.post(`${API_BASE_URL}/users/register`, data);
       toast.success("Check your email for OTP verification.");
       setEmail(data.email); // Store email for OTP verification
       setOtpSent(true); // Set OTP sent to true

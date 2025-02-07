@@ -13,6 +13,7 @@ import { loginSuccess } from "../store/authSlice.js";
 import { toast } from 'react-toastify';
 import Loader from './Loader';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function Login() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,8 +35,11 @@ function Login() {
         
         // Send login request to backend
         const response = await axiosInstance.post(
-          "/api/v1/users/login",
-          payload
+          `${API_BASE_URL}/users/login`,
+          payload,
+          {
+            withCredentials: true, // ✅ Send cookies for authentication
+          }
         );
         
         const { accessToken, refreshToken, user } = response.data.data;
