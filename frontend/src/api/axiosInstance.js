@@ -35,7 +35,7 @@ axiosInstance.interceptors.response.use(
         error.config.headers.Authorization = `Bearer ${accessToken}`;
         return axiosInstance(error.config);
       } catch (err) {
-        console.error("Token refresh failed:", err.message);
+        // console.error("Token refresh failed:", err.message);
         localStorage.clear(); // Clear tokens on refresh failure
         navigate("/login");
         return Promise.reject(err);

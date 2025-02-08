@@ -6,13 +6,18 @@ const InstagramGallery = () => {
   useEffect(() => {
     const fetchInstagramPhotos = async () => {
       try {
-         const response = await fetch(
-           `${import.meta.env.VITE_API_BASE_URL}/gallery`
-         );
-         const data = await response.json();
-         setPhotos(data.data);
+        // console.log("🚀 Fetching Instagram Photos...");
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/gallery`
+        );
+
+        if (!response.ok)
+          throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const data = await response.json();
+        // console.log("📸 Instagram Photos:", data);
       } catch (error) {
-        console.error("Error fetching Instagram photos:", error);
+        console.error("❌ Error fetching Instagram photos:", error.message);
       }
     };
 

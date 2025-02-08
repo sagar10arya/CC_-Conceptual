@@ -11,12 +11,17 @@ import { log } from "console";
 
 const app = express();
 
+// ✅ Routes
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/gallery", instagramRoutes); 
+
 app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL,
       "https://www.conceptualclassess.com",
-      "https://conceptualclassess.com"
+      "https://conceptualclassess.com",
+      "https://conceptual.onrender.com",
     ],
     credentials: true,
     methods: ["GET", "POST", "PATCH", "DELETE"], // Ensure allowed methods
@@ -28,14 +33,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
 
-app.use((req, res, next) => {
-  console.log(`Incoming Request: ${req.method} ${req.url}`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`Incoming Request: ${req.method} ${req.url}`);
+//   next();
+// });
 
-// ✅ Routes
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/instagram", instagramRoutes); 
 
 // ✅ Serve Frontend (Only if dist/ exists)
 const __dirname = path.resolve();

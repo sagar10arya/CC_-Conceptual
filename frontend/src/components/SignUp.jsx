@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
+import logoCC from "../assets/logoCC.png";
 
 function Signup() {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ function Signup() {
       {/* Left Section with Logo */}
       <div className="hidden lg:flex flex-col items-center justify-center lg:w-1/2 h-full bg-gray-100 text-black p-8">
         <Logo
-          imageSrc="../src/assets/logoCC.png"
+          imageSrc={logoCC}
           altText="Conceptual Classes Logo"
           className="h-24 sm:h-32 lg:h-48"
         />
