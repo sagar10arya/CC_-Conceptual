@@ -11,9 +11,14 @@ const app = express();
 
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL || "http://localhost:5173",
-    "https://conceptual.onrender.com"],
+    origin: [
+      process.env.FRONTEND_URL,
+      "https://www.conceptualclassess.com",
+      "https://conceptualclassess.com"
+    ],
     credentials: true,
+    methods: ["GET", "POST", "PATCH", "DELETE"], // Ensure allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
   })
 );
 
