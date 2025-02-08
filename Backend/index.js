@@ -1,11 +1,13 @@
 import "dotenv/config";
 import connectDB from "./src/db/index.js";
 import userRouter from "./src/routes/user.routes.js";
+import instagramRoutes from './src/routes/instagram.routes.js'
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import fs from "fs";
+import { log } from "console";
 
 const app = express();
 
@@ -26,8 +28,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+  console.log(`Incoming Request: ${req.method} ${req.url}`);
+  next();
+});
+
 // ✅ Routes
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/instagram", instagramRoutes); 
 
 // ✅ Serve Frontend (Only if dist/ exists)
 const __dirname = path.resolve();

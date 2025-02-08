@@ -6,12 +6,11 @@ const InstagramGallery = () => {
   useEffect(() => {
     const fetchInstagramPhotos = async () => {
       try {
-        const response = await fetch(
-          `https://graph.instagram.com/me/media?fields=id,media_type,media_url,caption&access_token=${import.meta.env.VITE_INSTAGRAM_ACCESS_TOKEN}`
-        );
-        const data = await response.json();
-        // console.log(data.data);
-        setPhotos(data.data);
+         const response = await fetch(
+           `${import.meta.env.VITE_API_BASE_URL}/gallery`
+         );
+         const data = await response.json();
+         setPhotos(data.data);
       } catch (error) {
         console.error("Error fetching Instagram photos:", error);
       }
