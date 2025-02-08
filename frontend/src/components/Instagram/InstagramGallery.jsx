@@ -13,7 +13,7 @@ const InstagramGallery = () => {
         // console.log(data.data);
         setPhotos(data.data);
       } catch (error) {
-        console.error("Error fetching Instagram photos:", error);
+        // console.error("Error fetching Instagram photos:", error);
       }
     };
 
