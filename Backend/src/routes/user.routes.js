@@ -7,11 +7,17 @@ import {
   verifyEmail,
   resendVerificationEmail,
   resetPassword,
-  forgotPassword
+  forgotPassword,
+  getCurrentUser,
+  updateProfile,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { isAdmin } from "../middlewares/auth.middleware.js";
+import { getAllUsers } from "../controllers/user.controller.js";
 
 const router = Router();
+
+router.get("/admin/users", verifyJWT, isAdmin, getAllUsers);
 
 router.route("/register").post(registerUser)
 // Verify email
@@ -27,5 +33,7 @@ router.route("/refresh-token").post(refreshAccessToken);
 
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(resetPassword);
+
+router.route("/me").get(verifyJWT, getCurrentUser).patch(verifyJWT, updateProfile);
 
 export default router;

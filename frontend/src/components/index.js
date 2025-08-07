@@ -13,6 +13,7 @@ import Carousels from "./Carousels";
 import ExamCard from "./ExamCard";
 import Badge from "./Badge";
 import ProfileCard from "./ProfileCard";
+import Loader from "./Loader";
 
 export{
     Header,
@@ -30,4 +31,5 @@ export{
     ExamCard,
     Badge,
     ProfileCard,
+    Loader
 }

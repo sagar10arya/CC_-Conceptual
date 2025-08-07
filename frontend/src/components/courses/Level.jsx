@@ -34,16 +34,18 @@ const Level = () => {
   return (
     <div className="w-full h-auto flex flex-col items-center text-center justify-center p-10">
       <div className="w-full flex flex-col items-center">
-        <p className="font-bold text-3xl md:text-4xl text-gray-700 mt-12">{course.category} Levels</p>
-        <div className="w-36 h-1 border-b-4 border-blue-800 rounded-2xl mt-4"></div>
-        <p className="font-bold text-xl md:text-2xl text-gray-700 mt-4">
+        <p className="font-bold text-3xl md:text-4xl text-gray-700 dark:text-gray-200 mt-12">
+          {course.category} Levels
+        </p>
+        <div className="w-36 h-1 border-b-4 border-gray-800 dark:border-gray-200 rounded-2xl mt-4"></div>
+        <p className="font-bold text-xl md:text-2xl text-gray-700 dark:text-gray-200 mt-4">
           Choose your level.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8 mt-8 justify-items-center">
           {course.levels.map((level) => (
             <ExamCard
-              className=''
+              className=""
               key={level.name}
               examName={level.name}
               onClick={() => handleCardClick(level.name)} // Pass level name here

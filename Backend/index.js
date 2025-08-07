@@ -1,52 +1,59 @@
 import "dotenv/config";
 import connectDB from "./src/db/index.js";
 import userRouter from "./src/routes/user.routes.js";
-import instagramRoutes from './src/routes/instagram.routes.js'
+import adminRouter from "./src/routes/admin.routes.js";
+import galleryRouter from "./src/routes/gallery.routes.js";
+// import instagramRoutes from "./src/routes/instagram.routes.js";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import fs from "fs";
-import { log } from "console";
 
 const app = express();
 
-// ✅ Routes
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/gallery", instagramRoutes); 
-
+// CORS Setup
 app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL,
+      "http://localhost:5173",
       "https://www.conceptualclassess.com",
       "https://conceptualclassess.com",
       "https://conceptual.onrender.com",
     ],
     credentials: true,
-    methods: ["GET", "POST", "PATCH", "DELETE"], // Ensure allowed methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
 
-// app.use((req, res, next) => {
-//   console.log(`Incoming Request: ${req.method} ${req.url}`);
-//   next();
-// });
+// API Routes
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/gallery", galleryRouter);
+app.use("/api/v1/admin", adminRouter);
+// app.use("/api/v1/gallery", instagramRoutes);
 
+// Debug all API hits
+app.use("/api/*", (req, res, next) => {
+  console.log("API route hit:", req.method, req.originalUrl);
+  next();
+});
 
-// ✅ Serve Frontend (Only if dist/ exists)
+// Serve Frontend (only for non-API routes)
 const __dirname = path.resolve();
 const frontendPath = path.join(__dirname, "frontend", "dist");
 
 if (fs.existsSync(frontendPath)) {
   app.use(express.static(frontendPath));
 
-  app.get("*", (req, res) => {
+  // Only handle NON-API frontend routes
+  app.get(/^\/(?!api).*/, (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 } else {
@@ -55,7 +62,24 @@ if (fs.existsSync(frontendPath)) {
   );
 }
 
-// ✅ Connect to Database and Start Server
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  
+  // If headers already sent, delegate to default handler
+  if (res.headersSent) {
+    return next(err);
+  }
+  
+  // Send JSON response for API errors
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal Server Error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
+});
+
+// Connect DB & Start Server
 connectDB()
   .then(() => {
     const PORT = process.env.PORT || 8000;

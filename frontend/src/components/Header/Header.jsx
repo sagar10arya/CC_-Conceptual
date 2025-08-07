@@ -3,16 +3,30 @@ import { Container, Logo, Badge } from "../index";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import logoCC from "../../assets/logoCC.png";
-import { logout } from "../../store/authSlice";
+import { logout } from "../../store/authSlice.js";
 import { LogoutBtn } from "../index.js";
+import ThemeToggle from "../ThemeToggle.jsx";
 
 function Header() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false); // Track scroll state
+  const [isScrolled, setIsScrolled] = useState(false); // Track scroll 
+  
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  useEffect(() => {   // closing dropdown on outside click
+    const handleClickOutside = (e) => {
+      if (!e.target.closest(".user-menu")) setIsUserMenuOpen(false);
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
 
   const authStatus = useSelector((state) => state.auth.isAuthenticated);
   // console.log("AuthStatus::   ",authStatus);
+
+  const user = useSelector((state) => state.auth.user);
+  // console.log("Logged in user:", user);
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -54,8 +68,8 @@ function Header() {
     <header
       className={`py-2 fixed top-0 w-full z-10 transition-colors duration-300 ${
         isScrolled
-          ? "bg-gradient-to-r from-gray-400 to-gray-600 shadow-lg"
-          : "bg-transparent text-black"
+          ? "bg-gradient-to-r from-gray-400 to-gray-600 dark:from-gray-700 dark:to-gray-900 shadow-lg"
+          : "bg-transparent dark:bg-transparent"
       }`}
     >
       <Container>
@@ -82,10 +96,10 @@ function Header() {
                       to={item.slug}
                       className={`${
                         location.pathname === item.slug
-                          ? "text-red-600 font-extrabold"
+                          ? "text-red-600 dark:text-red-400 font-extrabold"
                           : isScrolled
-                          ? "text-gray-300"
-                          : "text-black"
+                            ? "text-gray-300 dark:text-gray-300"
+                            : "text-black dark:text-white"
                       } font-medium hover:opacity-100 opacity-80 transition-opacity`}
                     >
                       {item.name}
@@ -97,37 +111,96 @@ function Header() {
           </ul>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden md:block">
-            <ul className="flex items-center space-x-4">
-              {authStatus ? (
-                // Logout button when authenticated
-                <li>
-                  <LogoutBtn />
-                </li>
-              ) : (
-                // Login/Signup buttons when not authenticated
-                authItems.map(
-                  (item) =>
-                    item.active && (
-                      <li key={item.name}>
-                        <button
-                          onClick={() => handleNavClick(item.slug)}
-                          className="px-6 py-2 text-sm font-semibold rounded-full bg-gray-500 hover:bg-gray-700 text-white shadow-md transition-transform hover:scale-105"
-                        >
-                          {item.name}
-                        </button>
-                      </li>
+          <div className="hidden md:flex items-center space-x-4">
+            {authStatus ? (
+              <div className="relative user-menu">
+                {/* User Avatar Circle */}
+                <div className="flex items-center gap-2">
+                  {/* Text portion */}
+                  <span className="hidden sm:inline text-gray-700 dark:text-white">
+                    Hi, {user?.fullName?.split(" ")[0] || "User"}
+                  </span>
+
+                  {/* Avatar circle */}
+                  <div
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="w-10 h-10 rounded-full bg-gray-700 text-white flex items-center justify-center cursor-pointer"
+                  >
+                    {user?.fullName?.[0]?.toUpperCase() || "U"}
+                  </div>
+                </div>
+
+                {/* Dropdown */}
+                {isUserMenuOpen && (
+                  <ul className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-md rounded-md text-gray-800 dark:text-gray-200 z-30">
+                    <li className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                      {user?.role?.toUpperCase()}
+                    </li>
+                    <li>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          dispatch(logout());
+                          setIsUserMenuOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            ) : (
+              authItems.map(
+                (item) =>
+                  item.active && (
+                    <ul key={item.name}>
+                      <button
+                        onClick={() => handleNavClick(item.slug)}
+                        className="px-6 py-2 text-sm font-semibold rounded-full bg-gray-500 hover:bg-gray-700 text-white shadow-md transition-transform hover:scale-105"
+                      >
+                        {item.name}
+                      </button>
+                    </ul>
+                  )
+              )
+            )}
+            {(user?.role === "admin" || user?.role === "superadmin") && (
+              <ul>
+                <button
+                  onClick={() =>
+                    window.open(
+                      user?.role === "superadmin" ? "/admin" : "/admin",
+                      "_blank"
                     )
-                )
-              )}
-            </ul>
+                  }
+                  className={`text-white font-medium rounded-3xl text-sm px-5 py-2.5 ${
+                    user?.role === "superadmin"
+                      ? "bg-purple-700 hover:bg-purple-800"
+                      : "bg-gray-700 hover:bg-gray-900"
+                  }`}
+                >
+                  {user?.role === "superadmin" ? "Super Admin" : "Admin"}
+                </button>
+              </ul>
+            )}
+            <ThemeToggle />
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="text-gray-800 hover:text-gray-900 focus:outline-none text-3xl"
+              className="text-gray-800 dark:text-gray-200 hover:text-gray-900 focus:outline-none text-3xl"
             >
               &#8801;
             </button>
@@ -162,9 +235,58 @@ function Header() {
                     </li>
                   )
               )}
-              {authStatus ? (
+              {user?.role === "admin" || user?.role === "superadmin" ? (
                 <li>
-                  <LogoutBtn />
+                  <button
+                    onClick={() =>
+                      handleNavClick(
+                        user?.role === "superadmin" ? "/admin" : "/admin"
+                      )
+                    }
+                    className={`text-white font-semibold ${
+                      user?.role === "superadmin"
+                        ? "hover:text-purple-400"
+                        : "hover:text-yellow-400"
+                    }`}
+                  >
+                    {user?.role === "superadmin"
+                      ? "Super Admin Dashboard"
+                      : "Admin Dashboard"}
+                  </button>
+                </li>
+              ) : null}
+
+              {authStatus ? (
+                <li className="relative group">
+                  <div className="flex items-center gap-2">
+                    <span className="text-white">
+                      Hi, {user?.fullName?.split(" ")[0] || "User"}
+                    </span>
+                    <div
+                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                      className="w-10 h-10 rounded-full bg-gray-700 text-white flex items-center justify-center cursor-pointer"
+                    >
+                      {user?.fullName?.[0]?.toUpperCase() || "U"}
+                    </div>
+                  </div>
+                  <ul className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md text-gray-800 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition duration-200 translate-y-1 z-20">
+                    <li>
+                      <Link
+                        to="/complete-profile"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => dispatch(logout())}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
                 </li>
               ) : (
                 authItems.map(
@@ -173,7 +295,7 @@ function Header() {
                       <li key={item.name}>
                         <button
                           onClick={() => handleNavClick(item.slug)}
-                          className="px-6 py-2 text-sm font-semibold rounded-full bg-gray-500 hover:bg-gray-700 text-white shadow-md"
+                          className="px-6 py-2 text-sm font-semibold rounded-full bg-gray-500 hover:bg-gray-700 text-white shadow-md transition-transform hover:scale-105"
                         >
                           {item.name}
                         </button>
@@ -181,6 +303,7 @@ function Header() {
                     )
                 )
               )}
+              <ThemeToggle />
             </ul>
           </div>
         </div>

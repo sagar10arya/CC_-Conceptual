@@ -1,11 +1,11 @@
 const YouTubeEmbed = () => {
   return (
-    <section className="bg-gray-200 py-10">
+    <section className="bg-gray-200 dark:bg-gray-800 py-10 transition-colors duration-300">
       <div className="container mx-auto px-4 flex flex-col items-center text-center">
-        <h2 className="text-gray-700 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-relaxed">
+        <h2 className="text-gray-700 dark:text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-relaxed">
           Start your learning journey for free with our YouTube content!
         </h2>
-        <div className="w-20 h-1 bg-gray-900 rounded-full my-4"></div>
+        <div className="w-20 h-1 bg-gray-900 dark:bg-gray-200 rounded-full my-4"></div>
         <div className="w-full max-w-2xl">
           <div className="relative pb-[56.25%] rounded-lg overflow-hidden shadow-lg">
             <iframe
@@ -22,7 +22,7 @@ const YouTubeEmbed = () => {
           href="https://youtube.com/@conceptualclasses2624?si=pwMz2mzUeHUbIX7C"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 bg-red-500 text-white text-sm sm:text-base px-8 py-3 rounded-md font-semibold hover:bg-red-800 transition duration-300"
+          className="mt-8 bg-red-500 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 text-white text-sm sm:text-base px-8 py-3 rounded-md font-semibold transition duration-300"
         >
           Subscribe to Our YouTube Channel
         </a>

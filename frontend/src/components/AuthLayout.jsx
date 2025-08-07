@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
-import { loginSuccess } from "../store/authSlice";
+import { loginSuccess } from "../store/authSlice.js";
 
 export default function AuthLayout({ children, authentication = true }) {
   const navigate = useNavigate();
@@ -13,13 +13,19 @@ export default function AuthLayout({ children, authentication = true }) {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
+    const storedUser = localStorage.getItem("user");
 
     const verifyToken = async () => {
+      // Hydrate from localStorage if user already exists
+      if (authentication && !authStatus && token && storedUser) {
+        dispatch(loginSuccess({ user: JSON.parse(storedUser), token }));
+      }
+      
       if (authentication && !authStatus) {
         if (token && refreshToken) {
           try {
             const response = await axiosInstance.post(
-              "/api/v1/users/refresh-token",
+              "/users/refresh-token",
               {
                 refreshToken,
               }

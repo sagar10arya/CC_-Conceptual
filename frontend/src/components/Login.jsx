@@ -35,7 +35,7 @@ function Login() {
         
         // Send login request to backend
         const response = await axiosInstance.post(
-          "/api/v1/users/login",
+          "/users/login",
           payload
         );
         
@@ -77,9 +77,9 @@ function Login() {
     };
 
     return (
-      <div className="flex flex-col lg:flex-row items-center justify-between w-full min-h-screen bg-gray-100">
+      <div className="flex flex-col lg:flex-row items-center justify-between w-full min-h-screen bg-gray-100 dark:bg-gray-800">
         {/* Left Section with Logo */}
-        <div className="hidden lg:flex flex-col items-center justify-center lg:w-1/2 h-full bg-gray-100 text-black p-8">
+        <div className="hidden lg:flex flex-col items-center justify-center lg:w-1/2 h-full bg-gray-100 dark:bg-gray-800 text-black dark:text-white p-8">
           <Logo
             imageSrc={logoCC}
             altText="Conceptual Classes Logo"
@@ -94,71 +94,58 @@ function Login() {
         </div>
 
         {/* Right Section with Form */}
-        <div className="flex flex-col justify-center w-full md:w-1/2 h-full p-8 md:p-16 bg-gray-100">
-          <h2 className="text-2xl font-bold text-center text-blue-600 mt-10 mb-6">
-            Sign in to your account
-          </h2>
-          <form onSubmit={handleSubmit(logIn)} className="space-y-5">
-            <Input
-              label="Email or Username"
-              placeholder="Enter your email or username"
-              type="text"
-              id="email-or-username-input"
-              {...register("emailOrUsername", { required: true })}
-            />
+        <div className="flex flex-col justify-center items-center w-full h-screen p-4 sm:p-6 md:w-1/2 md:h-full md:p-16 bg-gray-100 dark:bg-gray-800">
+          <div className="w-full max-w-md">
+            {" "}
+            {/* Container for consistent width */}
+            <h2 className="text-2xl font-bold text-center text-gray-600 dark:text-blue-400 mb-6">
+              Sign in to your account
+            </h2>
+            <form onSubmit={handleSubmit(logIn)} className="space-y-5">
+              <Input
+                label="Email or Username"
+                placeholder="Enter your email or username"
+                type="text"
+                id="email-or-username-input"
+                {...register("emailOrUsername", { required: true })}
+              />
 
-            <Input
-              label="Password "
-              placeholder="Enter your password"
-              type="password"
-              id="password-input"
-              {...register("password", { required: true })}
-            />
+              <Input
+                label="Password"
+                placeholder="Enter your password"
+                type="password"
+                id="password-input"
+                {...register("password", { required: true })}
+              />
 
-            {/* Forgot Password Link */}
-            <div className="text-right">
-              <button
-                type="button"
-                onClick={handleOpenModal}
-                className="text-sm text-blue-600 hover:underline"
+              <div className="text-right">
+                <button
+                  type="button"
+                  onClick={handleOpenModal}
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-700 text-white"
+                disabled={loading}
               >
-                Forgot Password?
-              </button>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full bg-gray-700 hover:bg-gray-90 text-white"
-              disabled={loading}
-            >
-              {loading ? <Loader /> : "Sign In"}{" "}
-            </Button>
-
-            {/* OR Divider */}
-            {/* <div className="flex items-center my-2">
-              <hr className="flex-grow border-t border-gray-300" />
-              <span className="px-4 text-sm text-gray-500">OR</span>
-              <hr className="flex-grow border border-gray-300" />
-            </div> */}
-
-            {/* Google Sign In Button */}
-            {/* <Button
-              type="button"
-              bgColor="bg-white"
-              textColor="text-gray-900"
-              className="w-full flex items-center justify-center border border-gray-300 shadow-lg bg-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 ease-in-out"
-            >
-              <FontAwesomeIcon icon={faGoogle} className="mr-2" />
-              Continue with Google
-            </Button> */}
-          </form>
-
-          <p className="mt-6 text-center text-gray-600">
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-blue-600 hover:underline">
-              Sign Up
-            </Link>
-          </p>
+                {loading ? <Loader /> : "Sign In"}
+              </Button>
+            </form>
+            <p className="mt-6 text-center text-gray-600 dark:text-gray-200">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                Sign Up
+              </Link>
+            </p>
+          </div>
         </div>
 
         {/* Forgot Password Modal */}

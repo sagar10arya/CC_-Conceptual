@@ -76,11 +76,11 @@ function Subject() {
     <div className="w-full h-auto flex flex-col items-center text-center justify-center p-10">
       <div className="w-full flex flex-col items-center">
         {/* Page Header */}
-        <p className="font-bold text-3xl md:text-4xl text-gray-700 mt-12">
+        <p className="font-bold text-3xl md:text-4xl text-gray-700 dark:text-gray-200 mt-12">
           {`Subjects for Class ${level.name} (${course.category})`}
         </p>
-        <div className="w-36 h-1 border-b-4 border-blue-800 rounded-2xl mt-4"></div>
-        <p className="font-bold text-xl md:text-2xl text-gray-700 mt-4">
+        <div className="w-36 h-1 border-b-4 border-blue-800 dark:border-gray-200 rounded-2xl mt-4"></div>
+        <p className="font-bold text-xl md:text-2xl text-gray-700 dark:text-gray-200 mt-4">
           Explore the subjects and their available resources.
         </p>
 
