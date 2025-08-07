@@ -11,8 +11,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/v1": {
-        // target: "https://conceptual.onrender.com", // Use your deployed backend
-        target: "http://localhost:8000", // ✅ Local backend
+        target: "https://conceptual.onrender.com", // Use your deployed backend
+        // target: "http://localhost:8000", // ✅ Local backend
         changeOrigin: true,
         secure: false,
       },
