@@ -13,9 +13,11 @@ const StudyMaterial = () => {
   return (
     <div className="w-full h-auto flex flex-col items-center text-center p-10">
       <div className="w-full flex flex-col items-center">
-        <p className="font-bold text-3xl md:text-4xl text-gray-700 mt-12">Your Study Corner</p>
-        <div className="w-36 h-1 border-b-4 border-blue-800 rounded-2xl mt-4"></div>
-        <p className="font-bold text-xl md:text-2xl text-gray-700 mt-4">
+        <p className="font-bold text-3xl md:text-4xl text-gray-700 dark:text-gray-200 mt-12">
+          Your Study Corner
+        </p>
+        <div className="w-36 h-1 border-b-4 border-gray-800 dark:border-gray-400 rounded-2xl mt-4"></div>
+        <p className="font-bold text-xl md:text-2xl text-gray-700 dark:text-gray-200 mt-4">
           Explore comprehensive study materials for various exams.
         </p>
 

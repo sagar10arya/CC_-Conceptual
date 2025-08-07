@@ -36,13 +36,13 @@ const registerUser = asyncHandler(async (req, res) => {
   // return response
 
   /* get user details from the frontend  */
-  const { fullName, email, username, password, school, city } = req.body;
+  const { email, username, password } = req.body;
   // console.log(req.body)
   // console.log("username: ", username)
 
   /*   get user details from the frontend */
   if (
-    [fullName, email, username, password, school, city].some(
+    [email, username, password].some(
       (field) => field?.trim() === ""
     )
   ) {
@@ -67,15 +67,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
   /* create user object - create entry in db */
   const user = await User.create({
-    fullName,
     email: email.toLowerCase(),
     password,
-    school,
-    city,
     username: username.toLowerCase(),
     isVerified: false,
     otp,
     otpExpiresAt,
+    profileCompleted: false, // Explicitly set to false
   });
 
   if (!user?.email && !req.body?.email) {
@@ -293,6 +291,7 @@ const loginUser = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         {
+          // user: loggedInUser,
           user: loggedInUser,
           accessToken,
           refreshToken,
@@ -484,6 +483,74 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find().select("-password -refreshToken");
+  res.status(200).json({ users });
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).select(
+    "-password -refreshToken"
+  );
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  res
+    .status(200)
+    .json(new ApiResponse(200, user, "User retrieved successfully"));
+});
+
+const updateProfile = asyncHandler(async (req, res) => {
+  const { fullName, school, city } = req.body;
+
+  // 1. First validate inputs
+  if (!fullName || !school || !city) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  // 2. Update with atomic operation
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        // Explicit $set for clarity
+        fullName,
+        school,
+        city,
+        profileCompleted: true,
+        updatedAt: new Date(), // Force timestamp update
+      },
+    },
+    {
+      new: true,
+      runValidators: true, // Ensure schema validation
+    }
+  ).select("-password -refreshToken -__v"); // Cleaner response
+
+  if (!updatedUser) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // 3. Return standardized response with ALL necessary fields
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        _id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        fullName: updatedUser.fullName,
+        school: updatedUser.school,
+        city: updatedUser.city,
+        profileCompleted: updatedUser.profileCompleted,
+        role: updatedUser.role,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt,
+      },
+      "Profile updated successfully"
+    )
+  );
+});
 
 export {
   registerUser,
@@ -494,4 +561,7 @@ export {
   resendVerificationEmail,
   forgotPassword,
   resetPassword,
+  getAllUsers,
+  getCurrentUser,
+  updateProfile,
 };

@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
+import themeReducer from "./themeSlice";;
 
 const store = configureStore({
   reducer: {
+    theme: themeReducer,
     auth: authReducer,
-    //TODO: add  more slices for posts -> courses, etc
   },
 });
 

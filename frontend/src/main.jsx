@@ -6,18 +6,20 @@ import './index.css';
 import App from './App.jsx';
 import store from './store';
 import { Login, Signup, AuthLayout } from './components';
-import Home from './pages/Home';
-import Courses from "./pages/Courses"
-import StudyMaterial from './pages/StudyMaterial'
-import TestSeries from './pages/TestSeries';
-import Gallery from './pages/Gallery';
-import Level from './components/courses/Level';
-import Subject from './components/courses/Subject';
-import Chapters from './components/courses/Chapters';
-import TermsPage from './components/Footer/company/TermsPage';
-import PrivacyPolicy from './components/Footer/company/PrivacyPolicy';
-import PaymentTerms from './components/Footer/company/PaymentTerms';
+import { Home, Courses, StudyMaterial, TestSeries, Gallery } from "./pages/index.js";
+import {Level, Subject, Chapters} from './components/courses/index.js';
+import {TermsPage, PrivacyPolicy, PaymentTerms} from './components/Footer/index.js';
 import VerifyEmail from './components/VerifyEmail';
+
+// Private Routes
+import AdminRoute from "./components/PrivateRoutes/AdminRoute.jsx"
+import ProfilePage from './components/ProfilePage.jsx';
+
+import AdminLayout from "./pages/admin/layout/AdminLayout.jsx"
+import AdminDashboard from "./pages/admin/dashboard/AdminDashboard.jsx"
+import GalleryManager from "./pages/admin/gallery/GalleryManager.jsx"
+import CourseManager from "./pages/admin/courses/CourseManager.jsx"
+import AnnouncementManager from "./pages/admin/announcements/AnnouncementManager.jsx"
 
 const router = createBrowserRouter([
   {
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/profile",
+        element: (
+          <AuthLayout>
+            <ProfilePage />
+          </AuthLayout>
+        ),
+      },
+      {
         path: "/courses",
         element: (
           <AuthLayout>
@@ -56,9 +66,6 @@ const router = createBrowserRouter([
             <StudyMaterial />
           </AuthLayout>
         ),
-        // children: [
-        //
-        // ],
       },
       {
         path: "/study-material/:courseId/:levelName",
@@ -81,29 +88,40 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
-      {
-        path: "/gallery",
-        element: <Gallery />,
-      },
-      // Company -- terms, policy, payment
-      {
-        path: "/terms-conditions",
-        element: <TermsPage />,
-      },
-      {
-        path: "/privacy-policy",
-        element: <PrivacyPolicy />,
-      },
-      {
-        path: "/payment-terms",
-        element: <PaymentTerms />,
-      },
 
       {
         path: "/verify-email",
         element: <VerifyEmail />,
       },
+      // Admin
+      {
+        path: "/admin",
+        element: (
+          <AuthLayout>
+            {/* <AdminRoute> */}
+            {/* <AdminLayout /> */}
+            <AdminRoute />
+            {/* </AdminRoute> */}
+          </AuthLayout>
+        ),
+        children: [
+    {
+      element: <AdminLayout />, // Move AdminLayout here
+      children: [
+        { index: true, element: <AdminDashboard /> },
+        { path: "gallery", element: <GalleryManager /> },
+        { path: "courses", element: <CourseManager /> },
+        { path: "announcements", element: <AnnouncementManager /> },
+      ],
+    },
+  ],
+      },
 
+      // Public Routes
+      { path: "/gallery", element: <Gallery /> },
+      { path: "/terms-conditions", element: <TermsPage /> },
+      { path: "/privacy-policy", element: <PrivacyPolicy /> },
+      { path: "/payment-terms", element: <PaymentTerms /> },
     ],
   },
 ]);

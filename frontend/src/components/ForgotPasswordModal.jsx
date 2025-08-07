@@ -34,7 +34,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
     if (!isOtpSent) {
       setIsLoading(true);
       try {
-        await axiosInstance.post("/api/v1/users/forgot-password", { email });
+        await axiosInstance.post("/users/forgot-password", { email });
         setMessage("If the email exists, you will receive an OTP.");
         setIsOtpSent(true);
         setIsLoading(false); // Done loading
@@ -49,7 +49,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
       }
 
       try {
-        await axiosInstance.post("/api/v1/users/reset-password", {
+        await axiosInstance.post("/users/reset-password", {
           email,
           otp,
           newPassword,
@@ -67,66 +67,57 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-8">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md p-6 border border-gray-200 dark:border-gray-700">
         {!isSubmitted ? (
           <>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-3">
               Forgot Password
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
               {isOtpSent
                 ? "Enter the OTP sent to your email and reset your password."
                 : "Enter your email address to receive an OTP."}
             </p>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                  htmlFor="email"
-                >
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Email Address
                 </label>
                 <input
                   type="email"
-                  id="email"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
+
               {isOtpSent && (
                 <>
-                  <div className="mb-4">
-                    <label
-                      className="block text-sm font-medium text-gray-700 mb-2"
-                      htmlFor="otp"
-                    >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       OTP
                     </label>
                     <input
                       type="text"
-                      id="otp"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Enter the OTP"
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
                       required
                     />
                   </div>
-                  <div className="mb-4">
-                    <label
-                      className="block text-sm font-medium text-gray-700 mb-2"
-                      htmlFor="new-password"
-                    >
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       New Password
                     </label>
                     <input
                       type="password"
-                      id="new-password"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Enter your new password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
@@ -135,38 +126,39 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
                   </div>
                 </>
               )}
+
               {message && (
-                <p
-                  className={`text-sm mb-4 ${
+                <div
+                  className={`text-sm p-3 rounded-md ${
                     message.includes("error") || message.includes("Unable")
-                      ? "text-red-600"
-                      : "text-green-600"
+                      ? "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300"
+                      : "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-300"
                   }`}
                 >
                   {message}
-                </p>
+                </div>
               )}
-              <div className="flex justify-between items-center">
+
+              <div className="flex justify-between items-center pt-2">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 px-4 py-2"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className={`${
-                    isOtpSent
-                      ? "bg-blue-500 hover:bg-blue-800"
-                      : "bg-blue-500 hover:bg-blue-700"
-                  } text-white px-6 py-2 rounded-lg shadow transition-all duration-200 ease-in-out ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  className={`px-5 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors ${
+                    isLoading ? "opacity-70 cursor-not-allowed" : ""
                   }`}
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <span className="animate-spin"><Loader /></span> // Optional spinner
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader className="h-4 w-4" />
+                      Processing...
+                    </span>
                   ) : isOtpSent ? (
                     "Reset Password"
                   ) : (
@@ -177,14 +169,29 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
             </form>
           </>
         ) : (
-          <div className="text-center">
-            <h2 className="text-2xl font-semibold text-green-600 mb-4">
+          <div className="text-center py-4">
+            <div className="mx-auto w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4">
+              <svg
+                className="w-6 h-6 text-green-500 dark:text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+            </div>
+            <h2 className="text-xl font-semibold text-green-600 dark:text-green-400 mb-2">
               Success!
             </h2>
-            <p className="text-gray-700 mb-6">{message}</p>
+            <p className="text-gray-700 dark:text-gray-300 mb-5">{message}</p>
             <button
               onClick={onClose}
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600"
+              className="px-5 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-md"
             >
               Close
             </button>

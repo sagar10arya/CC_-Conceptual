@@ -1,8 +1,6 @@
 import React from 'react';
 import ExamCardsGrid from './ExamsGridCards.jsx';
-import ProfileData from './ProfileData.jsx'
 import Testimonials from './Testimonials.jsx';
-import { Link } from "react-router-dom";
 import Carousels from '../components/Carousels.jsx';
 import YouTubeEmbed from '../components/YouTube/YouTubeEmbed.jsx';
 
@@ -16,10 +14,10 @@ function Home() {
       {/* Courses and details */}
       <div className="w-full h-auto flex flex-wrap flex-col items-center text-center p-6 ">
         <div className="w-full h-auto flex flex-wrap flex-col items-center">
-          <p className="text-gray-600 text-3xl font-bold md:text-4xl text-center">
+          <p className="text-gray-600 dark:text-gray-200 text-3xl font-bold md:text-4xl text-center">
             "Courses we offer"
           </p>
-          <div className="w-28 h-1 border-b-4 border-gray-900 rounded-2xl mt-2 md:mt-4"></div>
+          <div className="w-28 h-1 border-b-4 border-gray-900 dark:border-gray-200 rounded-2xl mt-2 md:mt-4"></div>
         </div>
 
         <div className="w-full flex flex-wrap justify-evenly ">
@@ -47,10 +45,10 @@ function Home() {
       {/* Testimonials */}
       <div className="w-full h-auto flex flex-wrap flex-col items-center text-center p-2">
         <div className="w-full h-auto flex flex-wrap flex-col items-center">
-          <p className="text-gray-600 text-3xl font-bold md:text-4xl text-center">
+          <p className="text-gray-600 dark:text-gray-200 text-3xl font-bold md:text-4xl text-center">
             "What our Students Say"
           </p>
-          <div className="w-28 h-1 border-b-4 border-gray-900 rounded-2xl mt-2 md:mt-4"></div>
+          <div className="w-28 h-1 border-b-4 border-gray-900 dark:border-gray-200 rounded-2xl mt-2 md:mt-4"></div>
         </div>
       </div>
       <Testimonials />
