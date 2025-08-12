@@ -54,7 +54,7 @@ function App() {
               })
             );
           } else {
-            console.warn("Token expired, logging out...");
+            // console.warn("Token expired, logging out...");
             dispatch(logout());
             navigate("/login");
           }
