@@ -70,7 +70,7 @@ function Testimonials() {
         ))}
       </Swiper>
 
-      <style jsx global>{`
+      <style>{`
         .swiper-pagination-bullet {
           background: rgba(0, 0, 0, 0.5);
         }

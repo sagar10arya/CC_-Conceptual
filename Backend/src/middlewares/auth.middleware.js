@@ -6,42 +6,38 @@ import { User } from "../models/user.model.js";
 /* Middleware to verify JSON Web Tokens (JWT) to authenticate users making requests to your server */
 
 // export const verifyJWT = asyncHandler( async (req, res, next) => {
-export const verifyJWT = asyncHandler(async (req, _, next) => {
+export const verifyJWT = asyncHandler(async (req, res, next) => {
   try {
-    // Get token from cookies or Authorization header
+    // Enhanced token extraction
     const token =
       req.cookies?.accessToken ||
-      req.header("Authorization")?.replace("Bearer ", "");
+      req.headers["authorization"]?.replace("Bearer ", "");
 
-    if (!token) {
-      throw new ApiError(401, "Unauthorized: No access token provided.");
-    }
+    if (!token) throw new ApiError(401, "Authorization token missing");
 
-    // Verify token using secret
-    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    // Debug logging
+    // console.log("Incoming token:", token);
+    // console.log("JWT Secret exists:", !!process.env.ACCESS_TOKEN_SECRET);
 
-    // Find user by decoded token _id (stored in token during login)
-    const user = await User.findById(decodedToken?._id).select(
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, {
+      ignoreExpiration: false,
+    });
+
+    const user = await User.findById(decoded._id).select(
       "-password -refreshToken"
     );
+    if (!user) throw new ApiError(401, "User not found");
+    if (!user.isVerified) throw new ApiError(403, "Please verify your email");
 
-    if (!user) {
-      throw new ApiError(401, "Unauthorized: Invalid access token.");
-    }
-
-    // Prevent unverified users from accessing routes
-    if (!user.isVerified) {
-      throw new ApiError(403, "Email not verified. Please verify your email.");
-    }
-
-    // Attach user to request object so next middleware/controller can use it
     req.user = user;
-    next(); // next() function is called to pass control to the next middleware
+    next();
   } catch (error) {
-    throw new ApiError(
-      401,
-      error?.message || "Unauthorized: Invalid or expired access token."
-    );
+    console.error("Auth error:", error);
+    const message =
+      error.name === "TokenExpiredError"
+        ? "Token expired"
+        : "Invalid authorization token";
+    throw new ApiError(401, message);
   }
 });
 

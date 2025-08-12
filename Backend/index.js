@@ -88,6 +88,11 @@ app.use((err, req, res, next) => {
   });
 });
 
+// In your backend (e.g., server.js)
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Connect DB & Start Server
 connectDB()
   .then(() => {
