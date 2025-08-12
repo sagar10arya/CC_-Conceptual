@@ -1,0 +1,14 @@
+name: Keep Render Alive
+on:
+  schedule:
+    - cron: '*/14 * * * *'  # Runs every 14 minutes
+  workflow_dispatch:         # Optional: Allows manual triggers
+
+jobs:
+  ping-render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Server
+        run: |
+          curl -s -o /dev/null "https://www.conceptualclassess.com"
+          echo "Successfully pinged Render!"
