@@ -11,7 +11,7 @@ export default defineConfig({
   define: {
     "import.meta.env.VITE_API_BASE_URL": JSON.stringify(
       process.env.NODE_ENV === "development"
-        ? "https://conceptual.onrender.com/api/v1"
+        ? "https://www.conceptualclassess.com/api/v1"
         : "/api/v1"
     ),
   },
